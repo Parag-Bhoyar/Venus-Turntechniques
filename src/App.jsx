@@ -3,15 +3,15 @@ import "./App.css";
 const products = [
   {
     title: "Precision Machined Components",
-    image: "/products/product1.jpg",
+    image: "/product/product1.jpg",
   },
   {
     title: "CNC Machined Components",
-    image: "/products/product2.jpg",
+    image: "/product/product2.jpg",
   },
   {
     title: "Precision Turned Components",
-    image: "/products/product3.jpg",
+    image: "/product/product3.jpg",
   },
 ];
 

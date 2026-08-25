@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 
 const products = [
@@ -17,9 +16,6 @@ const products = [
 ];
 
 function App() {
-  const [isSending, setIsSending] = useState(false);
-  const [message, setMessage] = useState("");
-
   const scrollToInquiry = () => {
     document.getElementById("inquiry")?.scrollIntoView({
       behavior: "smooth",
@@ -28,9 +24,6 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    setIsSending(true);
-    setMessage("");
 
     const form = e.target;
 
@@ -56,22 +49,21 @@ function App() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "Something went wrong.");
+        throw new Error(
+          result.message || "Unable to submit inquiry."
+        );
       }
 
-      setMessage(
-        "✓ Inquiry submitted successfully! We will contact you soon."
-      );
+      alert("Thank you! Your inquiry has been submitted successfully.");
 
       form.reset();
     } catch (error) {
-      console.error(error);
+      console.error("Inquiry error:", error);
 
-      setMessage(
-        "✕ Unable to submit inquiry. Please try again."
+      alert(
+        error.message ||
+          "Unable to submit inquiry. Please try again."
       );
-    } finally {
-      setIsSending(false);
     }
   };
 
@@ -83,8 +75,8 @@ function App() {
         <div className="container nav-inner">
 
           <div className="logo">
-            <span>VENUS</span>
-            <small>TURNTECHNIQUES</small>
+            <span>BHOYAR'S</span>
+            <small>VENUS TURNTECHNIQUES</small>
           </div>
 
           <nav>
@@ -423,8 +415,8 @@ function App() {
                 </label>
 
                 <input
-                  type="text"
                   name="name"
+                  type="text"
                   placeholder="Your name"
                   required
                 />
@@ -439,8 +431,8 @@ function App() {
                 </label>
 
                 <input
-                  type="tel"
                   name="mobile"
+                  type="tel"
                   placeholder="+91"
                   required
                 />
@@ -459,8 +451,8 @@ function App() {
                 </label>
 
                 <input
-                  type="email"
                   name="email"
+                  type="email"
                   placeholder="your@email.com"
                   required
                 />
@@ -475,8 +467,8 @@ function App() {
                 </label>
 
                 <input
-                  type="text"
                   name="country"
+                  type="text"
                   placeholder="Country"
                   required
                 />
@@ -493,8 +485,8 @@ function App() {
               </label>
 
               <input
-                type="text"
                 name="location"
+                type="text"
                 placeholder="City / Location"
                 required
               />
@@ -565,19 +557,9 @@ function App() {
             <button
               className="submit-button"
               type="submit"
-              disabled={isSending}
             >
-              {isSending
-                ? "Sending..."
-                : "Submit Inquiry →"}
+              Submit Inquiry →
             </button>
-
-
-            {message && (
-              <div className="form-message">
-                {message}
-              </div>
-            )}
 
           </form>
 
@@ -611,6 +593,59 @@ function App() {
 
           <div className="contact-details">
 
+            {/* OWNER */}
+            <div>
+
+              <span>
+                OWNER
+              </span>
+
+              <p>
+                <strong>
+                  Sunil Bhoyar
+                </strong>
+
+                <br />
+
+                Owner, Venus Turntechniques
+              </p>
+
+            </div>
+
+
+            {/* PHONE */}
+            <div>
+
+              <span>
+                PHONE
+              </span>
+
+              <p>
+                <a href="tel:+919373280938">
+                  +91 9373280938
+                </a>
+              </p>
+
+            </div>
+
+
+            {/* EMAIL */}
+            <div>
+
+              <span>
+                COMPANY EMAIL
+              </span>
+
+              <p>
+                <a href="mailto:venus.turntechniques@gmail.com">
+                  venus.turntechniques@gmail.com
+                </a>
+              </p>
+
+            </div>
+
+
+            {/* LOCATION */}
             <div>
 
               <span>
@@ -618,24 +653,15 @@ function App() {
               </span>
 
               <p>
-                Nagpur, Maharashtra
-                <br />
-                India
-              </p>
-
-            </div>
-
-
-            <div>
-
-              <span>
-                CONTACT PERSON
-              </span>
-
-              <p>
-                S. Bhoyar
-                <br />
-                Owner
+                <a
+                  href="https://maps.app.goo.gl/n9CYWZYTqPsDSKA9A"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Nagpur, Maharashtra, India
+                  <br />
+                  View on Google Maps →
+                </a>
               </p>
 
             </div>
@@ -660,11 +686,11 @@ function App() {
           <div className="logo">
 
             <span>
-              VENUS
+              BHOYAR'S
             </span>
 
             <small>
-              TURNTECHNIQUES
+              VENUS TURNTECHNIQUES
             </small>
 
           </div>

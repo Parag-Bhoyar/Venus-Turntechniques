@@ -1,8 +1,6 @@
-const { Resend } = require("resend");
+import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({
       success: false,
@@ -11,6 +9,19 @@ module.exports = async function handler(req, res) {
   }
 
   try {
+    const apiKey = process.env.RESEND_API_KEY;
+
+    if (!apiKey) {
+      console.error("RESEND_API_KEY is missing");
+
+      return res.status(500).json({
+        success: false,
+        message: "Email service is not configured.",
+      });
+    }
+
+    const resend = new Resend(apiKey);
+
     const {
       name,
       mobile,
@@ -43,56 +54,40 @@ module.exports = async function handler(req, res) {
       subject: `New Product Inquiry - ${product}`,
 
       html: `
-        <div style="font-family: Arial, sans-serif; line-height: 1.6; max-width: 700px; margin: auto;">
+        <div style="font-family: Arial, sans-serif; max-width: 700px; margin: auto;">
 
-          <h2 style="color: #111;">
-            New Product Inquiry
-          </h2>
+          <h2>New Product Inquiry</h2>
 
           <p>
-            A new inquiry has been submitted through the
-            Venus Turntechniques website.
+            A new inquiry has been submitted through
+            the Venus Turntechniques website.
           </p>
 
-          <hr />
+          <hr>
 
           <h3>Customer Details</h3>
 
-          <p>
-            <strong>Name:</strong> ${name}
-          </p>
+          <p><strong>Name:</strong> ${name}</p>
 
-          <p>
-            <strong>Mobile:</strong> ${mobile}
-          </p>
+          <p><strong>Mobile:</strong> ${mobile}</p>
 
-          <p>
-            <strong>Email:</strong> ${email}
-          </p>
+          <p><strong>Email:</strong> ${email}</p>
 
-          <p>
-            <strong>Country:</strong> ${country}
-          </p>
+          <p><strong>Country:</strong> ${country}</p>
 
-          <p>
-            <strong>Location:</strong> ${location}
-          </p>
+          <p><strong>Location:</strong> ${location}</p>
 
-          <h3>Product</h3>
+          <h3>Product Required</h3>
 
-          <p>
-            <strong>Product Required:</strong> ${product}
-          </p>
+          <p>${product}</p>
 
           <h3>Requirement</h3>
 
+          <p>${requirement}</p>
+
+          <hr>
+
           <p>
-            ${requirement}
-          </p>
-
-          <hr />
-
-          <p style="color: #666; font-size: 13px;">
             This inquiry was submitted from the
             Venus Turntechniques website.
           </p>
@@ -102,7 +97,7 @@ module.exports = async function handler(req, res) {
     });
 
     if (error) {
-      console.error("Resend error:", error);
+      console.error("RESEND ERROR:", error);
 
       return res.status(500).json({
         success: false,
@@ -110,7 +105,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    console.log("Email sent successfully:", data);
+    console.log("EMAIL SENT:", data);
 
     return res.status(200).json({
       success: true,
@@ -119,11 +114,11 @@ module.exports = async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error("Server error:", error);
+    console.error("FUNCTION ERROR:", error);
 
     return res.status(500).json({
       success: false,
       message: error.message || "Server error.",
     });
   }
-};
+}

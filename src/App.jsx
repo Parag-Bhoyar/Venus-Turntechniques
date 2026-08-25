@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./App.css";
 
 const products = [
@@ -16,29 +17,71 @@ const products = [
 ];
 
 function App() {
-  const scrollToInquiry = () => {
-    const inquirySection = document.getElementById("inquiry");
+  const [isSending, setIsSending] = useState(false);
+  const [message, setMessage] = useState("");
 
-    if (inquirySection) {
-      inquirySection.scrollIntoView({
-        behavior: "smooth",
-      });
-    }
+  const scrollToInquiry = () => {
+    document.getElementById("inquiry")?.scrollIntoView({
+      behavior: "smooth",
+    });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    alert("Thank you! Your inquiry has been submitted.");
+    setIsSending(true);
+    setMessage("");
 
-    event.target.reset();
+    const form = e.target;
+
+    const formData = {
+      name: form.name.value,
+      mobile: form.mobile.value,
+      email: form.email.value,
+      country: form.country.value,
+      location: form.location.value,
+      product: form.product.value,
+      requirement: form.requirement.value,
+    };
+
+    try {
+      const response = await fetch("/api/send-inquiry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Something went wrong.");
+      }
+
+      setMessage(
+        "✓ Inquiry submitted successfully! We will contact you soon."
+      );
+
+      form.reset();
+    } catch (error) {
+      console.error(error);
+
+      setMessage(
+        "✕ Unable to submit inquiry. Please try again."
+      );
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
     <div className="app">
+
       {/* NAVBAR */}
       <header className="navbar">
         <div className="container nav-inner">
+
           <div className="logo">
             <span>VENUS</span>
             <small>TURNTECHNIQUES</small>
@@ -53,15 +96,22 @@ function App() {
             <a href="#contact">Contact</a>
           </nav>
 
-          <button className="nav-button" onClick={scrollToInquiry}>
+          <button
+            className="nav-button"
+            onClick={scrollToInquiry}
+          >
             Send Inquiry
           </button>
+
         </div>
       </header>
 
+
       {/* HERO */}
       <section id="home" className="hero">
+
         <div className="hero-content container">
+
           <div className="hero-badge">
             PRECISION ENGINEERING • NAGPUR
           </div>
@@ -73,46 +123,62 @@ function App() {
           </h1>
 
           <p>
-            Manufacturer of auto components and precision machine
-            components, with CNC machining services.
+            Manufacturer of auto components and precision
+            machine components, with CNC machining services.
           </p>
 
           <div className="hero-buttons">
+
             <button onClick={scrollToInquiry}>
               Send an Inquiry →
             </button>
 
-            <a href="#products">Explore Products</a>
+            <a href="#products">
+              Explore Products
+            </a>
+
           </div>
+
         </div>
+
       </section>
+
 
       {/* ABOUT */}
       <section id="about" className="about section">
+
         <div className="container about-grid">
+
           <div>
-            <span className="section-label">ABOUT US</span>
+
+            <span className="section-label">
+              ABOUT US
+            </span>
 
             <h2>
               Precision manufacturing
               <br />
               you can rely on.
             </h2>
+
           </div>
 
           <div className="about-text">
+
             <p>
-              Venus Turntechniques is a manufacturer based in
-              Nagpur, Maharashtra, specializing in auto components
-              and precision machine components.
+              Venus Turntechniques is a manufacturer based
+              in Nagpur, Maharashtra, specializing in auto
+              components and precision machine components.
             </p>
 
             <p>
               We are also engaged in offering CNC machining
-              services to meet precision manufacturing requirements.
+              services to meet precision manufacturing
+              requirements.
             </p>
 
             <div className="stats">
+
               <div>
                 <strong>15+</strong>
                 <span>Years on IndiaMART</span>
@@ -127,61 +193,98 @@ function App() {
                 <strong>Nagpur</strong>
                 <span>Maharashtra, India</span>
               </div>
+
             </div>
+
           </div>
+
         </div>
+
       </section>
+
 
       {/* PRODUCTS */}
       <section id="products" className="products section">
+
         <div className="container">
+
           <div className="section-heading">
+
             <div>
-              <span className="section-label">OUR PRODUCTS</span>
+
+              <span className="section-label">
+                OUR PRODUCTS
+              </span>
 
               <h2>
                 Precision components
                 <br />
                 for demanding applications.
               </h2>
+
             </div>
 
             <p>
               Explore our range of precision manufacturing
               components and CNC machined solutions.
             </p>
+
           </div>
 
+
           <div className="product-grid">
+
             {products.map((product, index) => (
-              <div className="product-card" key={product.title}>
+
+              <div
+                className="product-card"
+                key={product.title}
+              >
+
                 <div className="product-number">
                   0{index + 1}
                 </div>
 
                 <div className="product-image">
+
                   <img
                     src={product.image}
                     alt={product.title}
                   />
+
                 </div>
 
                 <div className="product-info">
-                  <h3>{product.title}</h3>
+
+                  <h3>
+                    {product.title}
+                  </h3>
 
                   <button onClick={scrollToInquiry}>
                     Send Inquiry →
                   </button>
+
                 </div>
+
               </div>
+
             ))}
+
           </div>
+
         </div>
+
       </section>
 
+
       {/* CAPABILITIES */}
-      <section id="capabilities" className="capabilities section">
+      <section
+        id="capabilities"
+        className="capabilities section"
+      >
+
         <div className="container">
+
           <span className="section-label">
             OUR CAPABILITIES
           </span>
@@ -192,58 +295,86 @@ function App() {
             on precision.
           </h2>
 
+
           <div className="capability-grid">
+
             <div className="capability">
+
               <span>01</span>
 
-              <h3>Precision Machining</h3>
+              <h3>
+                Precision Machining
+              </h3>
 
               <p>
-                Manufacturing of precision machine components
-                for industrial requirements.
+                Manufacturing of precision machine
+                components for industrial requirements.
               </p>
+
             </div>
 
+
             <div className="capability">
+
               <span>02</span>
 
-              <h3>Automotive Components</h3>
+              <h3>
+                Automotive Components
+              </h3>
 
               <p>
-                Manufacturing components for automotive
-                applications.
+                Manufacturing components for
+                automotive applications.
               </p>
+
             </div>
 
+
             <div className="capability">
+
               <span>03</span>
 
-              <h3>Precision Turning</h3>
+              <h3>
+                Precision Turning
+              </h3>
 
               <p>
                 Precision turned components manufactured
                 according to customer requirements.
               </p>
+
             </div>
+
 
             <div className="capability">
+
               <span>04</span>
 
-              <h3>CNC Machining</h3>
+              <h3>
+                CNC Machining
+              </h3>
 
               <p>
-                CNC machining services for accurate and
-                consistent component production.
+                CNC machining services for accurate
+                and consistent component production.
               </p>
+
             </div>
+
           </div>
+
         </div>
+
       </section>
+
 
       {/* INQUIRY */}
       <section id="inquiry" className="inquiry section">
+
         <div className="container inquiry-grid">
+
           <div className="inquiry-intro">
+
             <span className="section-label">
               PRODUCT INQUIRY
             </span>
@@ -259,6 +390,7 @@ function App() {
               Our team will get in touch with you.
             </p>
 
+
             <div className="inquiry-note">
               <span>✓</span>
               Precision manufacturing requirements
@@ -273,15 +405,22 @@ function App() {
               <span>✓</span>
               CNC machining requirements
             </div>
+
           </div>
+
 
           <form
             className="inquiry-form"
             onSubmit={handleSubmit}
           >
+
             <div className="form-row">
+
               <div className="form-group">
-                <label>Full Name *</label>
+
+                <label>
+                  Full Name *
+                </label>
 
                 <input
                   type="text"
@@ -289,10 +428,15 @@ function App() {
                   placeholder="Your name"
                   required
                 />
+
               </div>
 
+
               <div className="form-group">
-                <label>Mobile Number *</label>
+
+                <label>
+                  Mobile Number *
+                </label>
 
                 <input
                   type="tel"
@@ -300,12 +444,19 @@ function App() {
                   placeholder="+91"
                   required
                 />
+
               </div>
+
             </div>
 
+
             <div className="form-row">
+
               <div className="form-group">
-                <label>Email Address *</label>
+
+                <label>
+                  Email Address *
+                </label>
 
                 <input
                   type="email"
@@ -313,10 +464,15 @@ function App() {
                   placeholder="your@email.com"
                   required
                 />
+
               </div>
 
+
               <div className="form-group">
-                <label>Country *</label>
+
+                <label>
+                  Country *
+                </label>
 
                 <input
                   type="text"
@@ -324,11 +480,17 @@ function App() {
                   placeholder="Country"
                   required
                 />
+
               </div>
+
             </div>
 
+
             <div className="form-group">
-              <label>Location *</label>
+
+              <label>
+                Location *
+              </label>
 
               <input
                 type="text"
@@ -336,44 +498,59 @@ function App() {
                 placeholder="City / Location"
                 required
               />
+
             </div>
 
+
             <div className="form-group">
-              <label>Product Required *</label>
+
+              <label>
+                Product Required *
+              </label>
 
               <select
                 name="product"
-                defaultValue=""
                 required
+                defaultValue=""
               >
-                <option value="" disabled>
+
+                <option
+                  value=""
+                  disabled
+                >
                   Select a product
                 </option>
 
-                <option value="Precision Machined Components">
+                <option>
                   Precision Machined Components
                 </option>
 
-                <option value="CNC Machined Components">
+                <option>
                   CNC Machined Components
                 </option>
 
-                <option value="Precision Turned Components">
+                <option>
                   Precision Turned Components
                 </option>
 
-                <option value="Automotive Components">
+                <option>
                   Automotive Components
                 </option>
 
-                <option value="Other Requirement">
+                <option>
                   Other Requirement
                 </option>
+
               </select>
+
             </div>
 
+
             <div className="form-group">
-              <label>Product Requirement *</label>
+
+              <label>
+                Product Requirement *
+              </label>
 
               <textarea
                 name="requirement"
@@ -381,22 +558,44 @@ function App() {
                 placeholder="Tell us about your requirement..."
                 required
               ></textarea>
+
             </div>
+
 
             <button
               className="submit-button"
               type="submit"
+              disabled={isSending}
             >
-              Submit Inquiry →
+              {isSending
+                ? "Sending..."
+                : "Submit Inquiry →"}
             </button>
+
+
+            {message && (
+              <div className="form-message">
+                {message}
+              </div>
+            )}
+
           </form>
+
         </div>
+
       </section>
 
+
       {/* CONTACT */}
-      <section id="contact" className="contact section">
+      <section
+        id="contact"
+        className="contact section"
+      >
+
         <div className="container contact-content">
+
           <div>
+
             <span className="section-label">
               GET IN TOUCH
             </span>
@@ -406,52 +605,85 @@ function App() {
               <br />
               your requirement.
             </h2>
+
           </div>
 
+
           <div className="contact-details">
+
             <div>
-              <span>LOCATION</span>
+
+              <span>
+                LOCATION
+              </span>
 
               <p>
                 Nagpur, Maharashtra
                 <br />
                 India
               </p>
+
             </div>
 
+
             <div>
-              <span>CONTACT PERSON</span>
+
+              <span>
+                CONTACT PERSON
+              </span>
 
               <p>
                 S. Bhoyar
                 <br />
                 Owner
               </p>
+
             </div>
+
 
             <button onClick={scrollToInquiry}>
               Send Product Inquiry →
             </button>
+
           </div>
+
         </div>
+
       </section>
+
 
       {/* FOOTER */}
       <footer className="footer">
+
         <div className="container footer-inner">
+
           <div className="logo">
-            <span>VENUS</span>
-            <small>TURNTECHNIQUES</small>
+
+            <span>
+              VENUS
+            </span>
+
+            <small>
+              TURNTECHNIQUES
+            </small>
+
           </div>
 
+
           <p>
-            Manufacturer of Auto Components & Precision Machine
-            Components
+            Manufacturer of Auto Components &
+            Precision Machine Components
           </p>
 
-          <span>© 2026 Venus Turntechniques</span>
+
+          <span>
+            © 2026 Venus Turntechniques
+          </span>
+
         </div>
+
       </footer>
+
     </div>
   );
 }

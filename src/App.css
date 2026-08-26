@@ -94,7 +94,7 @@ a {
 
 .logo small {
   display: block;
-  margin-top: 0px;
+  margin-top: 0;
   font-size: 18px;
   letter-spacing: 4px;
   font-weight: 500;
